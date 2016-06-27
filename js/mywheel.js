@@ -16,19 +16,16 @@ var theWheel = new Winwheel({
 // Create new wheel object specifying the parameters at creation time.
 var theWheel = new Winwheel({
     'canvasId' : 'myCanvas',
-    'numSegments'  : 8,     // Specify number of segments.
+    'strokeStyle' : '#DDDDDD',
+    'lineWidth'   : 1,
+    'numSegments'  : 3,     // Specify number of segments.
     'outerRadius'  : 212,   // Set outer radius so wheel fits inside the background.
     'textFontSize' : 28,    // Set font size as desired.
     'segments'     :        // Define segments including colour and text.
         [
-            {'fillStyle' : '#eae56f', 'text' : 'Prize 1'},
-            {'fillStyle' : '#89f26e', 'text' : 'Prize 2'},
-            {'fillStyle' : '#7de6ef', 'text' : 'Prize 3'},
-            {'fillStyle' : '#e7706f', 'text' : 'Prize 4'},
-            {'fillStyle' : '#eae56f', 'text' : 'Prize 5'},
-            {'fillStyle' : '#89f26e', 'text' : 'Prize 6'},
-            {'fillStyle' : '#7de6ef', 'text' : 'Prize 7'},
-            {'fillStyle' : '#e7706f', 'text' : 'Prize 8'}
+            {'fillStyle' : '#EB4C56', 'text' : 'Prize 1'},
+            {'fillStyle' : '#07A5AB', 'text' : 'Prize 2'},
+            {'fillStyle' : '#A37752', 'text' : 'Prize 3'}
         ],
     'animation' :           // Specify the animation to use.
     {
@@ -39,10 +36,16 @@ var theWheel = new Winwheel({
     }
 });
 
+// Probability function
+function getStopAngle(){
+    return 360*Math.random();
+}
+
+theWheel.animation.stopAngle = getStopAngle();
+
 // Vars used by the code in this page to do power controls.
 var wheelPower    = 0;
 var wheelSpinning = false;
-
 // -------------------------------------------------------
 // Function to handle the onClick on the power buttons.
 // -------------------------------------------------------
@@ -63,6 +66,7 @@ function powerSelected(powerLevel)
         document.getElementById('spin_button').className = "clickable";
     }
 }
+
 
 // -------------------------------------------------------
 // Click handler for spin button.
@@ -88,8 +92,8 @@ function startSpin()
         }
 
         // Disable the spin button so can't click again while wheel is spinning.
-        document.getElementById('spin_button').src       = "spin_off.png";
-        document.getElementById('spin_button').className = "";
+        document.getElementById('spin_button').innerHTML = "Spinning....";
+        document.getElementById('spin_button').className = "spin-button";
         console.log("1234");
         // Begin the spin animation by calling startAnimation on the wheel object.
         theWheel.startAnimation();
@@ -119,7 +123,15 @@ function alertPrize()
 {
     // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
     var winningSegment = theWheel.getIndicatedSegment();
-
-    // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
-    alert("You have won " + winningSegment.text);
+    $("#spin_button").text("Done!");
+    bootbox.dialog({
+        message: "You have won " + winningSegment.text + ".",
+        title: "Prize result!",
+        buttons: {
+            main: {
+                label: "Close",
+                className: "btn-primary"
+            }
+        }
+    });
 }

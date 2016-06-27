@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +13,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="container">
         <div class="page-header">
@@ -23,24 +25,33 @@
         <div class="row">
             <div class="col-md-4 vcenter">
                 <div class="power_controls text-center">
-                    <br><br><br>
-                    <img id="spin_button" src="spin_off.png" alt="Spin" onClick="startSpin();" />
+                    <br>
+                    <br>
+                    <!-- Edited --><div id="spin_button" class="spin-button" alt="Spin" onClick="startSpin();">Spin</div>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" id="canvasContainer">
                 <canvas id="myCanvas" class="img-responsive" width="434" height="434">
                     Your browsers doesn't support canvas. Please change your browser.
                 </canvas>
+                <img id="prizePointer" src="basic_pointer.png" alt="V" />
             </div>
         </div>
     </div>
+    <footer class="custom-footer">
+        <div class="container">
+            Copyright © 2016 SKCC | <a href="https://www.facebook.com/skcomclub">Facebook</a> | Email: computerclub@sk.ac.th
+        </div>
+    </footer>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-3.0.0.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
-<script src="js/Winwheel.js"></script>
-<script src="js/mywheel.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
+    <script src="js/TweenMax.min.js"></script>
+    <script src="js/Winwheel.js"></script>
+    <script src="js/mywheel.js"></script>
 </body>
+
 </html>
