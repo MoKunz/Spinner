@@ -12,6 +12,9 @@ var theWheel = new Winwheel({
     'lineWidth'   : 2,
     'segments' : segments
 });*/
+var myRNG = new Math.seedrandom('SKCC27');
+
+var spinningCount = 50;
 
 // Create new wheel object specifying the parameters at creation time.
 var theWheel = new Winwheel({
@@ -23,22 +26,52 @@ var theWheel = new Winwheel({
     'textFontSize' : 28,    // Set font size as desired.
     'segments'     :        // Define segments including colour and text.
         [
-            {'fillStyle' : '#EB4C56', 'text' : 'Prize 1'},
-            {'fillStyle' : '#07A5AB', 'text' : 'Prize 2'},
-            {'fillStyle' : '#A37752', 'text' : 'Prize 3'}
+            {'fillStyle' : '#F5403A', 'text' : 'Flash drive'},
+            {'fillStyle' : '#2196F3', 'text' : 'Pen'},
+            {'fillStyle' : '#BBC007', 'text' : 'Thank you'}
         ],
     'animation' :           // Specify the animation to use.
     {
         'type'     : 'spinToStop',
-        'duration' : 5,     // Duration in seconds.
+        'duration' : 1,     // Duration in seconds.
         'spins'    : 8,     // Number of complete spins.
         'callbackFinished' : 'alertPrize()'
     }
 });
 
+function randomRange(start,end){
+    return start + Math.random()*(end-start);
+}
+
+
 // Probability function
 function getStopAngle(){
-    return 360*Math.random();
+    var selection = myRNG()*1000;
+    var angle = Math.random()*120;
+    var item = 0;
+    //console.log("Random range: " + selection);
+    if(spinningCount < 50) spinningCount++;
+    if(selection >= 0 && selection <= 10 && spinningCount >= 50){
+        item = 0;
+        spinningCount = 0;
+    }
+    else if(selection > 10 && selection <= 230){
+        item = 1;
+    }
+    else{
+        item = 2;
+    }
+    return randomRange(item*120,(item+1)*120);
+    //return item;
+}
+
+function testProbability(times){
+    var map = [0,0,0];
+    for(var i = 0; i < times; i++){
+        map[getStopAngle()]++;
+    }
+    console.log("Probability result from " + times + " loops");
+    console.log(map);
 }
 
 theWheel.animation.stopAngle = getStopAngle();
@@ -94,13 +127,14 @@ function startSpin()
         // Disable the spin button so can't click again while wheel is spinning.
         document.getElementById('spin_button').innerHTML = "Spinning....";
         document.getElementById('spin_button').className = "spin-button";
-        console.log("1234");
         // Begin the spin animation by calling startAnimation on the wheel object.
         theWheel.startAnimation();
-
         // Set to true so that power can't be changed and spin button re-enabled during
         // the current animation. The user will have to reset before spinning again.
         wheelSpinning = true;
+    }
+    else{
+        resetWheel();
     }
 }
 
@@ -114,6 +148,8 @@ function resetWheel()
     theWheel.draw();                // Call draw to render changes to the wheel.
 
     wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+    $("#spin_button").text("Spin");
+    theWheel.animation.stopAngle = getStopAngle();
 }
 
 // -------------------------------------------------------
@@ -124,13 +160,22 @@ function alertPrize()
     // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
     var winningSegment = theWheel.getIndicatedSegment();
     $("#spin_button").text("Done!");
+    var color = winningSegment.fillStyle;
+    var msg;
+    if(winningSegment.text == "Thank you"){
+        msg = "Thank you for spinning.";
+    }
+    else{
+        msg = "You have won <span style='color: " + color + "'> " + winningSegment.text + "</span>";
+    }
     bootbox.dialog({
-        message: "You have won " + winningSegment.text + ".",
+        message: msg,
         title: "Prize result!",
+        className: 'alert-color',
         buttons: {
             main: {
                 label: "Close",
-                className: "btn-primary"
+                className: "btn-successy"
             }
         }
     });
