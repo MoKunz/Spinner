@@ -64,15 +64,15 @@ function getStopAngle(){
     var item = 0;
     //console.log("Random range: " + selection);
     if(spinningCount < 50) spinningCount++;
-    if(selection >= 0 && selection <= 1 && spinningCount >= 50) {
+    if (selection >= 0 && selection <= 100 && spinningCount >= 50) {
         item = 0;
         spinningCount = 0;
     }
-    else if(selection > 1 && selection <= 10 && spinningCount >= 50){
+    else if (selection > 100 && selection <= 300 && spinningCount >= 50) {
         item = 1;
         spinningCount = 0;
     }
-    else if(selection > 11 && selection <= 190) {
+    else if (selection > 300 && selection <= 650) {
         item = 2;
     }
     else{
