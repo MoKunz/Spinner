@@ -12,21 +12,23 @@ var theWheel = new Winwheel({
     'lineWidth'   : 2,
     'segments' : segments
 });*/
-var myRNG = new Math.seedrandom('SKCC27');
+var myRNG = new Math.seedrandom(new Date().getTime());
 
 var spinningCount = 50;
+var running = false;
 
 // Create new wheel object specifying the parameters at creation time.
 var theWheel = new Winwheel({
     'canvasId' : 'myCanvas',
     'strokeStyle' : '#DDDDDD',
     'lineWidth'   : 1,
-    'numSegments'  : 3,     // Specify number of segments.
+    'numSegments'  : 4,     // Specify number of segments.
     'outerRadius'  : 212,   // Set outer radius so wheel fits inside the background.
     'textFontSize' : 28,    // Set font size as desired.
     'segments'     :        // Define segments including colour and text.
         [
             {'fillStyle' : '#F5403A', 'text' : 'Flash drive'},
+            {'fillStyle' : '#F3A021', 'text' : 'Notebook'},
             {'fillStyle' : '#2196F3', 'text' : 'Pen'},
             {'fillStyle' : '#BBC007', 'text' : 'Thank you'}
         ],
@@ -39,6 +41,18 @@ var theWheel = new Winwheel({
     }
 });
 
+$( "body" ).keyup(function(e) {
+    var key = e.keyCode ? e.keyCode : e.which;
+    if(key == 27){
+        bootbox.hideAll();
+    }
+    else if(key == 68){
+        if(!(wheelSpinning && running)) resetWheel();
+    }
+});
+window.onkeyup = function(e){
+};
+
 function randomRange(start,end){
     return start + Math.random()*(end-start);
 }
@@ -47,21 +61,24 @@ function randomRange(start,end){
 // Probability function
 function getStopAngle(){
     var selection = myRNG()*1000;
-    var angle = Math.random()*120;
     var item = 0;
     //console.log("Random range: " + selection);
     if(spinningCount < 50) spinningCount++;
-    if(selection >= 0 && selection <= 10 && spinningCount >= 50){
+    if(selection >= 0 && selection <= 1 && spinningCount >= 50) {
         item = 0;
         spinningCount = 0;
     }
-    else if(selection > 10 && selection <= 230){
+    else if(selection > 1 && selection <= 10 && spinningCount >= 50){
         item = 1;
+        spinningCount = 0;
     }
-    else{
+    else if(selection > 11 && selection <= 190) {
         item = 2;
     }
-    return randomRange(item*120,(item+1)*120);
+    else{
+        item = 3;
+    }
+    return randomRange(item*90,(item+1)*90);
     //return item;
 }
 
@@ -106,6 +123,7 @@ function powerSelected(powerLevel)
 // -------------------------------------------------------
 function startSpin()
 {
+    if(wheelSpinning && running) return;
     // Ensure that spinning can't be clicked again while already running.
     if (wheelSpinning == false)
     {
@@ -132,6 +150,7 @@ function startSpin()
         // Set to true so that power can't be changed and spin button re-enabled during
         // the current animation. The user will have to reset before spinning again.
         wheelSpinning = true;
+        running = true;
     }
     else{
         resetWheel();
@@ -157,6 +176,7 @@ function resetWheel()
 // -------------------------------------------------------
 function alertPrize()
 {
+    running = false;
     // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
     var winningSegment = theWheel.getIndicatedSegment();
     $("#spin_button").text("Done!");
